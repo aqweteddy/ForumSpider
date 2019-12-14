@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+import scrapy
+from forum_spider.items import DcardItem
+
+
+class DcardSpider(scrapy.Spider):
+    name = 'dcard'
+    allowed_domains = ['dcard.tw']
+
+    def __init__(self, board: list, max_page: int, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.board = board
+        self.max_page = max_page
+
+    def start_requests(self):
+        for board in self.board:
+            url = 'https://www.dcard.tw/f/{}'.format(board) if board.lower() != 'all' else 'https://www.dcard.tw/f'
+            yield scrapy.Request(url, meta={'board': board, 'now_page': 1})
+
+    def parse(self, resp):
+        sel = resp.css('main>div>div')
+        urls = [text for text in sel.css('a::attr(href)').getall() if '@' not in text]
+        for title, url in zip(sel.css('h3::text').getall(), urls):
+            item = DcardItem()
+            item['title'] = title
+            item['url'] = 'https://www.dcard.tw' + url.split('-')[0]
+            yield scrapy.Request(url=item['url'], meta={'item': item}, callback=self.parse_post)
+
+    def parse_post(self, resp):
+        yield resp.meta['item']
+
