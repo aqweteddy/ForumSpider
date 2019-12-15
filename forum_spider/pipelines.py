@@ -4,11 +4,18 @@ from datetime import datetime
 from ckiptagger import NER, POS, WS
 from pymongo import MongoClient
 from scrapy.utils.project import get_project_settings
+from scrapy.exceptions import DropItem
 
-# TODO: Pipline: DB Pipeline
+# TODO: Pipeline LOGS
 # * Done: MongoDB
-# TODO: Process Item Pipeline(cut / NER ...)
+# * Done: Process Item Pipeline(cut / NER ...)
 
+
+class DropoutPipeline:
+    def process_item(self, item, spider):
+        if not item['title'] or not item['text'] or not item['url']:
+            raise DropItem("Drop article")
+        return item
 
 class CkipPipeline:
     def open_spider(self, spider):
@@ -17,18 +24,17 @@ class CkipPipeline:
         self.ner = NER('./ckip_model', disable_cuda=False)
 
     def process_item(self, item, spider):
-        if not item['title'] or not item['text']:
-            return
+
         title_seg, article_seg = self.ws([item['title'],
                                           item['text']])
         title_pos, article_pos = self.pos([title_seg, article_seg])
         title_ner, article_ner = self.ner(
             [title_seg, article_seg], [title_pos, article_pos])
 
-        item['ws_pos'] = {'title': map(self.make_pair, title_seg, title_pos),
-                          'text': map(self.make_pair, article_seg, article_pos)}
+        item['ws_pos'] = {'title': list(map(self.make_pair, title_seg, title_pos)),
+                          'text': list(map(self.make_pair, article_seg, article_pos))}
 
-        item['ner'] = {'title': title_ner, 'text': article_ner}
+        item['ner'] = {'title': list(title_ner), 'text': list(article_ner)}
         return item
 
     @staticmethod
@@ -49,10 +55,9 @@ class MongoDbPipeline:
         self.start_time = datetime.now()
 
     def process_item(self, item, spider):
-        print(item['url'])
         self.cur.update_one({'url': item['url']}, {
                             '$set': dict(item)}, upsert=True)
-        yield item
+        return item
 
     def close_spider(self, spider):
         end_time = datetime.now()
