@@ -18,6 +18,8 @@ class BaseItem(scrapy.Item):
     url = scrapy.Field()
     create_date = scrapy.Field()
     last_update_date = scrapy.Field()
+    ws_pos = scrapy.Field()
+    ner = scrapy.Field()
 
 
 class PttItem(BaseItem):

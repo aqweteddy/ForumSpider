@@ -15,7 +15,8 @@ ptt_settings = dict(
     COL_LOGS='logs',
     COL_NAME='article',
     ITEM_PIPELINES={
-        'forum_spider.pipelines.MongoDbPipeline': 100,
+        'forum_spider.pipelines.CkipPipeline': 100,
+        'forum_spider.pipelines.MongoDbPipeline': 200
     }
 )
 
