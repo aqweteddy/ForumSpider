@@ -5,8 +5,10 @@ from pymongo import MongoClient
 from scrapy.utils.project import get_project_settings
 
 # TODO: Pipline: DB Pipeline 
-#     Done: MongoDB
+# *Done: MongoDB
 # TODO: Process Item Pipeline(cut / NER ...)
+
+
 
 # MongoDB pipeline
 class MongoDbPipeline(object):

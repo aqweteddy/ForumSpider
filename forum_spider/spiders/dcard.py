@@ -6,13 +6,13 @@ from urllib.parse import urlencode
 import scrapy
 
 from forum_spider.items import DcardItem
-from forum_spider.spiders.custom_settings import dcard_settings
+from forum_spider.spiders.custom_settings import combine_settings
 
 
 class DcardSpider(scrapy.Spider):
     name = 'dcard'
     allowed_domains = ['dcard.tw']
-    custom_settings = dcard_settings
+    custom_settings = combine_settings(name)
 
     def __init__(self, board: list, max_page: int, popular=True, *args, **kwargs):
         super().__init__(*args, **kwargs)

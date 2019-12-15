@@ -2,12 +2,13 @@
 import scrapy
 
 from forum_spider.items import GamerItem
-from forum_spider.spiders.custom_settings import gamer_settings
+from forum_spider.spiders.custom_settings import combine_settings
 
 
 class GamerSpider(scrapy.Spider):
     name = 'gamer'
     allowed_domains = ['forum.gamer.com.tw']
+    custom_settings = combine_settings(name)
 
     def __init__(self, board_bsn: list, max_page: int, *args, **kwargs):
         super().__init__(*args, **kwargs)

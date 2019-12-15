@@ -4,13 +4,13 @@ from datetime import datetime
 import scrapy
 
 from forum_spider.items import PttItem
-from forum_spider.spiders.custom_settings import ptt_settings
+from forum_spider.spiders.custom_settings import combine_settings
 
 
 class PttSpider(scrapy.Spider):
     name = 'ptt'
     allowed_domains = ['ptt.cc']
-    custom_settings = ptt_settings
+    custom_settings = combine_settings(name)
 
     def __init__(self, board: list, max_page: int, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,8 +25,6 @@ class PttSpider(scrapy.Spider):
     def parse(self, resp):
         meta = resp.meta
 
-        item['board'] = meta['board']
-        item['forum'] = 'ptt'
         for post in resp.xpath('//div[@class="r-ent"]/div[@class="title"]/a'):
             item = PttItem()
             item['board'] = meta['board']

@@ -1,3 +1,7 @@
+from scrapy.utils.project import get_project_settings
+
+base_settings = get_project_settings()
+
 ptt_settings = dict(
     CONCURRENT_REQUESTS=32,
     DOWNLOAD_DELAY=0.5,
@@ -48,3 +52,11 @@ gamer_settings = dict(
         'forum_spider.pipelines.MongoDbPipeline': 300,
     }
 )
+
+def combine_settings(spider_name: str):
+    if spider_name == 'ptt':
+        return {**base_settings, **ptt_settings}
+    elif spider_name == 'gamer':
+        return {**base_settings, **gamer_settings}
+    elif spider_name == 'dcard':
+        return {**base_settings, **dcard_settings}
