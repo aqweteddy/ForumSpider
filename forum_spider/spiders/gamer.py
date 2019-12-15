@@ -28,6 +28,7 @@ class GamerSpider(scrapy.Spider):
 
         for sel in resp.css('.b-list-item'):
             item = GamerItem()
+            item['forum'] = 'gamer'
             try:
                 item['url'] = 'https://forum.gamer.com.tw/' + \
                     sel.css('.b-list__main>a::attr(href)').get()
@@ -55,7 +56,7 @@ class GamerSpider(scrapy.Spider):
             # article
             if sel.css('.c-post__header__title'):
                 item['title'] = sel.css('.c-post__header__title::text').get()
-                item['last_update_date'] = sel.css('.edittime::text').get()
+                item['last_update_date'] = ' '.join(sel.css('.edittime::text').get().split()[:-2])
                 item['text'] = ''.join(
                     sel.css('.c-article__content *::text').getall())
                 item['reply'] = {

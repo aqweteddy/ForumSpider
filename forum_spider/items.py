@@ -33,6 +33,7 @@ class PttItem(BaseItem):
 class GamerItem(BaseItem):
     reply = scrapy.Field()
     comment = scrapy.Field()
+    board_bsn = scrapy.Field()
 
 
 class DcardItem(BaseItem):

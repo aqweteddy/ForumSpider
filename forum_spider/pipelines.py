@@ -13,9 +13,10 @@ from scrapy.exceptions import DropItem
 
 class DropoutPipeline:
     def process_item(self, item, spider):
-        if not item['title'] or not item['text'] or not item['url']:
+        if not item.get('title', '') or not item.get('text', '') or not item.get('url', ''):
             raise DropItem("Drop article")
         return item
+
 
 class CkipPipeline:
     def open_spider(self, spider):
@@ -39,9 +40,6 @@ class CkipPipeline:
 
     @staticmethod
     def make_pair(x, y): return [x, y]
-
-
-# MongoDB pipeline
 
 
 class MongoDbPipeline:

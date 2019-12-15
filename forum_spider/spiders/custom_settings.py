@@ -17,7 +17,7 @@ ptt_settings = dict(
     ITEM_PIPELINES={
         'forum_spider.pipelines.DropoutPipeline': 100,
         'forum_spider.pipelines.CkipPipeline': 200,
-        'forum_spider.pipelines.MongoDbPipeline': 300
+        'forum_spider.pipelines.MongoDbPipeline': 900
     }
 )
 
@@ -34,7 +34,9 @@ dcard_settings = dict(
     COL_LOGS='logs',
     COL_NAME='article',
     ITEM_PIPELINES={
-        'forum_spider.pipelines.MongoDbPipeline': 300,
+        'forum_spider.pipelines.DropoutPipeline': 100,
+        'forum_spider.pipelines.CkipPipeline': 200,
+        'forum_spider.pipelines.MongoDbPipeline': 900
     }
 )
 
@@ -51,7 +53,9 @@ gamer_settings = dict(
     COL_LOGS='logs',
     COL_NAME='article',
     ITEM_PIPELINES={
-        'forum_spider.pipelines.MongoDbPipeline': 300,
+        'forum_spider.pipelines.DropoutPipeline': 100,
+        'forum_spider.pipelines.CkipPipeline': 200,
+        'forum_spider.pipelines.MongoDbPipeline': 900
     }
 )
 
