@@ -1,5 +1,6 @@
 from scrapy.utils.project import get_project_settings
 
+
 base_settings = get_project_settings()
 
 ptt_settings = dict(
@@ -11,7 +12,7 @@ ptt_settings = dict(
                ' Safari/537.36',
     AUTOTHROTTLE_START_DELAY=0.5,
     AUTOTHROTTLE_MAX_DELAY=30,
-    AUTOTHROTTLE_TARGET_CONCURRENCY=5,
+    AUTOTHROTTLE_TARGET_CONCURRENCY=6,
     COL_LOGS='logs',
     COL_NAME='article',
     ITEM_PIPELINES={

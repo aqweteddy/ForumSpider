@@ -1,7 +1,5 @@
 # ForumSpider
 
-
-
 ## Call from CrawlerProcess
 
 ```py

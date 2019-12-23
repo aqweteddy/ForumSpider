@@ -82,7 +82,7 @@ FEED_EXPORT_ENCODING = 'utf-8'
 # Enable showing throttling stats for every response received:
 AUTOTHROTTLE_DEBUG = False
 # ! LOG_LEVEL
-LOG_LEVEL = 'ERROR' 
+LOG_LEVEL = 'INFO' 
 # Enable and configure HTTP caching (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 #HTTPCACHE_ENABLED = True
@@ -92,5 +92,6 @@ LOG_LEVEL = 'ERROR'
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # ! MongoDB host and DBName
-MONGO_HOST = "localhost:27017"
+# MONGO_HOST = "localhost:27017"
+MONGO_HOST = 'mongodb://user:1234@linux.cs.ccu.edu.tw:27018'
 MONGO_DB = "forum"
