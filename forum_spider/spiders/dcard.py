@@ -45,9 +45,7 @@ class DcardSpider(scrapy.Spider):
             item['like_cnt'] = data['likeCount']
             yield scrapy.Request('https://dcard.tw/_api/posts/{}'.format(data['id']),
                                  callback=self.parse_post,
-                                 meta={
-                                     'item': item
-                                 })
+                                 meta={ 'item': item })
             last_id = item['id']
 
         if self.max_page < resp.meta['times'] and len(result) != 0:
