@@ -7,6 +7,7 @@ from scrapy.utils.project import get_project_settings
 from scrapy.exceptions import DropItem
 
 # TODO: Pipeline LOGS
+# TODO: export to json / csv
 # * Done: MongoDB
 # * Done: Process Item Pipeline(cut / NER ...)
 

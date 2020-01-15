@@ -42,3 +42,6 @@ class DcardItem(BaseItem):
     topics = scrapy.Field()
     comment_cnt = scrapy.Field()
     like_cnt = scrapy.Field()
+
+class M01Item(BaseItem):
+    sub_board = scrapy.Field()
