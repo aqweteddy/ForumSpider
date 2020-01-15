@@ -18,14 +18,16 @@ class BaseItem(scrapy.Item):
     url = scrapy.Field()
     create_date = scrapy.Field()
     last_update_date = scrapy.Field()
+    comment_cnt = scrapy.Field()
+    comment = scrapy.Field()  # [{text, push, user}] [{text, user}]
+
+
     ws_pos = scrapy.Field()
     ner = scrapy.Field()
-    comment = scrapy.Field()  # [{text, push, user}] [{text, user}]
 
 
 class PttItem(BaseItem):
     author_ip = scrapy.Field()
-    comment_cnt = scrapy.Field()
     category = scrapy.Field()
     img_link = scrapy.Field()
 
@@ -38,7 +40,6 @@ class GamerItem(BaseItem):
 class DcardItem(BaseItem):
     id = scrapy.Field()
     topics = scrapy.Field()
-    comment_cnt = scrapy.Field()
     like_cnt = scrapy.Field()
 
 class M01Item(BaseItem):
