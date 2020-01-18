@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 
 import scrapy
 from forum_spider.items import M01Item
 from forum_spider.spiders.custom_settings import combine_settings
 from urllib.parse import urlencode
-from forum_spider.items import M01Item
+
+
+# FIXME: some text of articles can't crawl
 
 
 class Mobile01Spider(scrapy.Spider):

@@ -20,10 +20,15 @@ class BaseItem(scrapy.Item):
     last_update_date = scrapy.Field()
     comment_cnt = scrapy.Field()
     comment = scrapy.Field()  # [{text, push, user}] [{text, user}]
+    text_seg = scrapy.Field()
+    text_pos = scrapy.Field()
+    text_ner = scrapy.Field()
+    title_seg = scrapy.Field()
+    title_pos = scrapy.Field()
+    title_ner = scrapy.Field()
 
-
-    ws_pos = scrapy.Field()
-    ner = scrapy.Field()
+    # ws_pos = scrapy.Field()
+    # ner = scrapy.Field()
 
 
 class PttItem(BaseItem):

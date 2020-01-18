@@ -15,11 +15,6 @@ ptt_settings = dict(
     AUTOTHROTTLE_TARGET_CONCURRENCY=6,
     COL_LOGS='logs',
     COL_NAME='article',
-    ITEM_PIPELINES={
-        'forum_spider.pipelines.DropoutPipeline': 100,
-        # 'forum_spider.pipelines.CkipPipeline': 200,
-        'forum_spider.pipelines.MongoDbPipeline': 900
-    }
 )
 
 dcard_settings = dict(
@@ -34,11 +29,6 @@ dcard_settings = dict(
     AUTOTHROTTLE_TARGET_CONCURRENCY=2,
     COL_LOGS='logs',
     COL_NAME='article',
-    ITEM_PIPELINES={
-        'forum_spider.pipelines.DropoutPipeline': 100,
-        # 'forum_spider.pipelines.CkipPipeline': 200,
-        'forum_spider.pipelines.MongoDbPipeline': 900
-    }
 )
 
 gamer_settings = dict(
@@ -50,18 +40,13 @@ gamer_settings = dict(
                ' Safari/537.36',
     AUTOTHROTTLE_START_DELAY=0.5,
     AUTOTHROTTLE_MAX_DELAY=30,
-    AUTOTHROTTLE_TARGET_CONCURRENCY=2,
+    AUTOTHROTTLE_TARGET_CONCURRENCY=1,
     COL_LOGS='logs',
     COL_NAME='article',
-    ITEM_PIPELINES={
-        'forum_spider.pipelines.DropoutPipeline': 100,
-        'forum_spider.pipelines.CkipPipeline': 200,
-        'forum_spider.pipelines.MongoDbPipeline': 900
-    }
 )
 
 mobile01_settings = dict(
- CONCURRENT_REQUESTS=4,
+    CONCURRENT_REQUESTS=4,
     DOWNLOAD_DELAY=0.5,
     CONCURRENT_REQUESTS_PER_DOMAIN=4,
     CONCURRENT_REQUESTS_PER_IP=2,
@@ -69,15 +54,11 @@ mobile01_settings = dict(
                ' Safari/537.36',
     AUTOTHROTTLE_START_DELAY=0.5,
     AUTOTHROTTLE_MAX_DELAY=30,
-    AUTOTHROTTLE_TARGET_CONCURRENCY=2,
+    AUTOTHROTTLE_TARGET_CONCURRENCY=5,
     COL_LOGS='logs',
     COL_NAME='article',
-    ITEM_PIPELINES={
-        'forum_spider.pipelines.DropoutPipeline': 100,
-        # 'forum_spider.pipelines.CkipPipeline': 200,
-        'forum_spider.pipelines.MongoDbPipeline': 900
-    }
 )
+
 
 def combine_settings(spider_name: str):
     if spider_name == 'ptt':
@@ -87,5 +68,4 @@ def combine_settings(spider_name: str):
     elif spider_name == 'dcard':
         return {**base_settings, **dcard_settings}
     elif spider_name == 'm01':
-        return {**base_settings, **dcard_settings}
-
+        return {**base_settings, **mobile01_settings}

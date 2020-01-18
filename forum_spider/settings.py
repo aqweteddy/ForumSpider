@@ -92,6 +92,13 @@ LOG_LEVEL = 'WARNING'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+ITEM_PIPELINES={
+        'forum_spider.pipelines.DropoutPipeline': 100,
+        # 'forum_spider.pipelines.TextPreprocessPipeline': 200,
+        # 'forum_spider.pipelines.GaisDbPipeline': 850,
+        'forum_spider.pipelines.MongoDbPipeline': 900
+    }
+
 # ! MongoDB host and DBName
 # MONGO_HOST = "localhost:27017"
 MONGO_HOST = 'mongodb://user:1234@linux.cs.ccu.edu.tw:27018'

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-
+from datetime import datetime
 from forum_spider.items import GamerItem
 from forum_spider.spiders.custom_settings import combine_settings
 
@@ -63,6 +63,7 @@ class GamerSpider(scrapy.Spider):
                     'text': sel.css('.reply-content__article *::text').getall(),
                     'author': sel.css('.reply-content__user *::text').getall()
                 }
+                print(item['last_update_date'])
             elif sel.css('.c-article__content *::text'):
                 # comment
                 comment.append({
