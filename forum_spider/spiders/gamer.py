@@ -16,7 +16,6 @@ class GamerSpider(scrapy.Spider):
         self.max_page = max_page
 
     def start_requests(self):
-
         for bsn in self.bsn:
             url = 'https://forum.gamer.com.tw/B.php?bsn={}'.format(bsn)
             yield scrapy.Request(url=url, callback=self.parse, meta={
@@ -25,14 +24,12 @@ class GamerSpider(scrapy.Spider):
             })
 
     def parse(self, resp):
-
         for sel in resp.css('.b-list-item'):
             item = GamerItem()
             item['forum'] = 'gamer'
             try:
                 item['url'] = 'https://forum.gamer.com.tw/' + \
                     sel.css('.b-list__main>a::attr(href)').get()
-                item['author'] = sel.css('.b-list__count__user>a::text').get()
                 item['board_bsn'] = resp.meta['bsn']
                 yield scrapy.Request(url=item['url'],
                                      callback=self.parse_post,
@@ -52,28 +49,40 @@ class GamerSpider(scrapy.Spider):
     def parse_post(self, resp):
         item = resp.meta['item']
         comment = []
+        print(item['url'])
         for sel in resp.css('.c-section'):
             # article
-            if sel.css('.c-post__header__title'):
-                item['title'] = sel.css('.c-post__header__title::text').get()
-                item['last_update_date'] = ' '.join(sel.css('.edittime::text').get().split()[:-2])
+            if sel.css('.c-post__header__title'):  # text
+                item['title'] = sel.css(
+                    '.c-post__header__title::text').get().strip()
+                item['author'] = sel.css(
+                    '.c-post__header__author>a.username::text').get().strip()
                 item['text'] = ''.join(
-                    sel.css('.c-article__content *::text').getall())
-                item['reply'] = {
-                    'text': sel.css('.reply-content__article *::text').getall(),
-                    'author': sel.css('.reply-content__user *::text').getall()
-                }
-                print(item['last_update_date'])
-            elif sel.css('.c-article__content *::text'):
+                    sel.css('div.c-article__content ::text').getall()).strip()
+
+                item['create_date'] = sel.css(
+                    'a.edittime::attr(data-mtime)').get().strip()
+                item['last_update_date'] = datetime.strptime(
+                    item['create_date'], '%Y-%m-%d %H:%M:%S')
+                item['create_date'] = item['last_update_date']
+                tmp = sel.css('a.count::text').getall()
+                item['like_cnt'] = 0 if tmp[0] == '-' else int(tmp[0]) if tmp[0] != '爆' else 1000
+                item['dislike_cnt'] = 0 if tmp[1] == '-' else int(tmp[1]) if tmp[1] != '爆' else 1000
+            if sel.css('.c-article__content *::text') and not sel.css('.c-post__header__title'):
                 # comment
                 comment.append({
-                    'text': ''.join(sel.css('.c-article__content *::text').getall()),
-                    'author': sel.css('.c-user__avatar::attr(data-gamercard-userid)').get(),
-                    'last_update_date': sel.css('.edittime::text').get(),
-                    'reply': {
-                        'text': sel.css('.reply-content__article *::text').getall(),
-                        'author': sel.css('.reply-content__user *::text').getall()
-                    }
+                    'author': sel.css('.c-post__header__author>a.username::text').get().strip(),
+                    'text': ''.join(sel.css('div.c-article__content ::text').getall()).strip()
                 })
-            item['comment'] = comment
-            yield item
+                # short reply
+                for author, text in zip(sel.css('.reply-content__user ::text').getall(),
+                                        sel.css('.reply-content__article ::text').getall()):
+                    comment.append({
+                        'author': author.strip(),
+                        'text': text.strip()
+                    })
+
+        item['comment'] = comment
+        print(item)
+
+        yield item

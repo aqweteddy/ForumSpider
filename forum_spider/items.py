@@ -27,9 +27,6 @@ class BaseItem(scrapy.Item):
     title_pos = scrapy.Field()
     title_ner = scrapy.Field()
 
-    # ws_pos = scrapy.Field()
-    # ner = scrapy.Field()
-
 
 class PttItem(BaseItem):
     author_ip = scrapy.Field()
@@ -38,14 +35,16 @@ class PttItem(BaseItem):
 
 
 class GamerItem(BaseItem):
-    reply = scrapy.Field()
     board_bsn = scrapy.Field()
+    like_cnt = scrapy.Field()
+    dislike_cnt = scrapy.Field()
 
 
 class DcardItem(BaseItem):
     id = scrapy.Field()
     topics = scrapy.Field()
     like_cnt = scrapy.Field()
+
 
 class M01Item(BaseItem):
     sub_board = scrapy.Field()

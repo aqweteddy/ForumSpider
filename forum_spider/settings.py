@@ -83,7 +83,7 @@ FEED_EXPORT_ENCODING = 'utf-8'
 AUTOTHROTTLE_DEBUG = False
 # ! LOG_LEVEL
 
-LOG_LEVEL = 'WARNING' 
+LOG_LEVEL = 'ERROR' 
 # Enable and configure HTTP caching (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 #HTTPCACHE_ENABLED = True

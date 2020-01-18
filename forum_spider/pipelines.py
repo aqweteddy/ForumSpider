@@ -41,10 +41,19 @@ class TextPreprocessPipeline:
         self.pos = POS('./ckip_model', disable_cuda=self.DISABLE_CUDA)
         self.ner = NER('./ckip_model', disable_cuda=self.DISABLE_CUDA)
 
+    def __remove_space(self, text: str):
+        text = text.replace(u'\xa0', u' ')
+        text = text.replace(u'\u3000',u' ')
+        return text
+
+
     def process_item(self, item, spider):
+        item['title'] = self.__remove_space(item['title'])
+        item['text'] = self.__remove_space(item['text'])
         # GAIS Tokenize
         # item['text_seg'] = self.tokenizer.tokenize(item['text'])
         # item['title_seg'] = self.tokenizer.tokenize(item['title'])
+
         item['text_seg'], item['title_seg'] = self.ws(
             [item['text'], item['title']])
         item['text_pos'], item['title_pos'] = self.pos(
