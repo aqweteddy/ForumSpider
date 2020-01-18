@@ -42,6 +42,7 @@ class DcardSpider(scrapy.Spider):
             item['comment_cnt'] = data['commentCount']
             item['forum'] = 'dcard'
             item['create_date'] = datetime.strptime(data['createdAt'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            item['last_update_date'] = item['create_date']
             item['like_cnt'] = data['likeCount']
             yield scrapy.Request('https://dcard.tw/_api/posts/{}'.format(data['id']),
                                  callback=self.parse_post,

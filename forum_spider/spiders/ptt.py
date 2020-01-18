@@ -55,12 +55,12 @@ class PttSpider(scrapy.Spider):
             item['title'] = resp.xpath(
                 '//meta[@property="og:title"]/@content').get()
         except IndexError:
-            item['title'] = 'err'
+            item['title'] = ''
 
         try:
             item['category'] = item['title'].split(']')[0].split('[')[1]
         except:
-            item['category'] = 'err'
+            item['category'] = ''
 
         data = sel.css('.article-meta-value::text').getall()
         try:
@@ -69,10 +69,10 @@ class PttSpider(scrapy.Spider):
             item['create_date'] = datetime.strptime(
                 data[3], '%a %b %d %H:%M:%S %Y')
         except:
-            item['author'] = 'err'
+            item['author'] = ''
             item['create_date'] = datetime.strptime(
                 'Mon Jan 1 00:00:00 1980', '%a %b %d %H:%M:%S %Y')
-
+        item['last_update_date'] = item['create_date']
         # get text
         # split: date, '※ 發信站: 批踢踢實業坊'
         date = data[3] if len(data) > 3 else 'err'
