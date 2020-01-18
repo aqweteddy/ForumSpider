@@ -3,3 +3,5 @@ __py*/
 ckip_model/
 .DS*
 output
+data/
+*.out

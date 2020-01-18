@@ -1,7 +1,7 @@
-from ckiptagger import WS, POS, NER
+from ckiptagger import WS, POS, NER, data_utils
 from gaisTokenizer import Tokenizer
 
-
+# data_utils.download_data_gdown("./")
 gt = Tokenizer()
 ws = WS('./data', disable_cuda=True)
 pos = POS('./data', disable_cuda=True)

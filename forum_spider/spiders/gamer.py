@@ -59,7 +59,8 @@ class GamerSpider(scrapy.Spider):
                     '.c-post__header__author>a.username::text').get().strip()
                 item['text'] = ''.join(
                     sel.css('div.c-article__content ::text').getall()).strip()
-
+                item['text'] += '\n'.join(
+                    sel.css('div.c-article__content ::attr(href)').getall()).strip()
                 item['create_date'] = sel.css(
                     'a.edittime::attr(data-mtime)').get().strip()
                 item['last_update_date'] = datetime.strptime(

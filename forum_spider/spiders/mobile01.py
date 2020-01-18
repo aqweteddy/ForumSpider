@@ -74,7 +74,7 @@ class Mobile01Spider(scrapy.Spider):
             name = user_info.css('.c-authorInfo__id>a::text').get().strip()
             if floor == 0 and 'text' not in item.keys():  # 樓主
                 item['author'] = name
-                item['text'] = '\n'.join(article.css('div::text').getall()).strip()
+                item['text'] = '\n'.join(article.css('div ::text').getall()).strip()
             else:  # 回覆
                 comment = article.css('::text').getall()
                 comment = '\n'.join(comment).strip()

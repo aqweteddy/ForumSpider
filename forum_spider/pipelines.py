@@ -21,10 +21,15 @@ class DropoutPipeline:
         self.cnt = 0  # number of DropItem
 
     def process_item(self, item, spider):
-        if not item.get('title', '') or not item.get('text', '') or not item.get('url', ''):
+        if not item.get('title', None):
             self.cnt += 1
-            raise DropItem("Drop article")
-            return
+            raise DropItem("Drop article because of title")
+        if not item.get('text', None):
+            self.cnt += 1
+            raise DropItem("Drop article because of text")
+        if not item.get('url', None):
+            self.cnt += 1
+            raise DropItem("Drop article because of url")
         return item
 
     def close_spider(self, spider):
@@ -32,7 +37,7 @@ class DropoutPipeline:
 
 
 class TextPreprocessPipeline:
-    DISABLE_CUDA = False
+    DISABLE_CUDA = True
 
     def open_spider(self, spider):
         self.tokenizer = Tokenizer()
@@ -131,4 +136,5 @@ class MongoDbPipeline:
             'start_time': self.start_time,
             'end_time': end_time,
         }
+        print(f'{spider.name} finished')
         self.cur_logs.insert(val)

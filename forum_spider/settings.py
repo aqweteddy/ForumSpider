@@ -52,9 +52,10 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'forum_spider.middlewares.ForumSpiderDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'forum_spider.middlewares.ForumSpiderDownloaderMiddleware': None,
+   'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -83,7 +84,7 @@ FEED_EXPORT_ENCODING = 'utf-8'
 AUTOTHROTTLE_DEBUG = False
 # ! LOG_LEVEL
 
-LOG_LEVEL = 'ERROR' 
+LOG_LEVEL = 'INFO' 
 # Enable and configure HTTP caching (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
 #HTTPCACHE_ENABLED = True

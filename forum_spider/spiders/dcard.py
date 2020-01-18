@@ -24,7 +24,7 @@ class DcardSpider(scrapy.Spider):
         for board in self.board:
             key = urlencode({'popular': str(self.popular).lower()})
             if board == 'hot':
-                url = 'https://dcard.tw/_api/forums/posts?{}'.format(key)
+                url = 'https://dcard.tw/_api/posts?{}'.format(key)
             else:
                 url = 'https://dcard.tw/_api/forums/{}/posts?{}'.format(board, key)
             yield scrapy.Request(url, meta={'times': 1, 'url': url})
