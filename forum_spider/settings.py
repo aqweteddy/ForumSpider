@@ -94,10 +94,10 @@ LOG_LEVEL = 'INFO'
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 ITEM_PIPELINES={
-        # 'forum_spider.pipelines.DropoutPipeline': 100,
-        # 'forum_spider.pipelines.TextPreprocessPipeline': 200,
+        'forum_spider.pipelines.DropoutPipeline': 100,
+        'forum_spider.pipelines.TextPreprocessPipeline': 200,
         # 'forum_spider.pipelines.GaisDbPipeline': 850,
-        # 'forum_spider.pipelines.MongoDbPipeline': 900
+        'forum_spider.pipelines.MongoDbPipeline': 900
     }
 
 # ! MongoDB host and DBName

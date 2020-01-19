@@ -61,7 +61,7 @@ class TextPreprocessPipeline:
     def process_item(self, item, spider):
         item['title'] = self.__remove_space(item['title'])
         item['text'] = self.__remove_space(item['text'])
-        
+
         if self.cur.find_one({'url': item['url'], 'last_update_date': item['last_update_date']}):
             print(f"Pass {item['url']}")
             return item
@@ -124,6 +124,7 @@ class GaisDbPipeline:
 
 class MongoDbPipeline:
     def open_spider(self, spider):
+        print(f'spider: {spider.name}')
         spider.log('MongoDbPipeline: connect to db')
         settings = get_project_settings()
         cli = MongoClient(settings['MONGO_HOST'])
