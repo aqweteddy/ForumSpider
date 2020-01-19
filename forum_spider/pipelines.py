@@ -40,6 +40,12 @@ class TextPreprocessPipeline:
     DISABLE_CUDA = True
 
     def open_spider(self, spider):
+        settings = get_project_settings()
+        cli = MongoClient(settings['MONGO_HOST'])
+        self.cur = cli[settings['MONGO_DB']
+                       ][spider.custom_settings['COL_NAME']]
+        
+
         self.tokenizer = Tokenizer()
 
         self.ws = WS('./ckip_model', disable_cuda=self.DISABLE_CUDA)
@@ -55,6 +61,10 @@ class TextPreprocessPipeline:
     def process_item(self, item, spider):
         item['title'] = self.__remove_space(item['title'])
         item['text'] = self.__remove_space(item['text'])
+        
+        if self.cur.find_one({'url': item['url'], 'last_update_date': item['last_update_date']}):
+            print(f"Pass {item['url']}")
+            return item
         # GAIS Tokenize
         # item['text_seg'] = self.tokenizer.tokenize(item['text'])
         # item['title_seg'] = self.tokenizer.tokenize(item['title'])
