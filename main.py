@@ -8,6 +8,8 @@ from forum_spider.spiders.mobile01 import Mobile01Spider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
+from index2board import DEFAULT_DCARD
+
 start = time.time()
 parser = ArgumentParser()
 parser.add_argument('--ptt_page', type=int, default=1, help='ptt spider pages for each board')
@@ -19,7 +21,8 @@ args = parser.parse_args()
 # 政治 廢文 3C 閒聊 生活 汽機車 感情 股票 電玩
 PTT_BOARD = ['Gossiping', 'C_Chat', 'NBA', 'HatePolitics', 'Lifeismoney', 'Stock', 'Baseball', 'sex','movie', 'WomenTalk', 'car', 'Beauty', 'MobileComm', 'Boy-Girl', 'marriage', 'joke', 'StupidClown']
 # PTT_BOARD = ['C_Chat']
-DCARD_BOARD = ['hot']
+# DCARD_BOARD = ['hot']
+DCARD_BOARD = DEFAULT_DCARD
 # 場外、講談說論、Joke
 GAMER_BOARD = [60076, 60440, 60555, 60030] 
 # GAMER_BOARD = [60076]
