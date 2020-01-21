@@ -38,7 +38,7 @@ class GamerSpider(scrapy.Spider):
             except TypeError:
                 pass
 
-        if resp.meta['page'] < self.max_page:
+        if resp.meta['page'] < self.max_page and resp.meta['page'] < 100:
             url = resp.css('.next::attr(href)').get()
             if url:
                 yield scrapy.Request(url='https://forum.gamer.com.tw/B.php' + url,
@@ -59,7 +59,8 @@ class GamerSpider(scrapy.Spider):
                     '.c-post__header__author>a.username::text').get().strip()
                 item['text'] = ''.join(
                     sel.css('div.c-article__content ::text').getall()).strip()
-
+                item['text'] += '\n'.join(
+                    sel.css('div.c-article__content ::attr(href)').getall()).strip()
                 item['create_date'] = sel.css(
                     'a.edittime::attr(data-mtime)').get().strip()
                 item['last_update_date'] = datetime.strptime(

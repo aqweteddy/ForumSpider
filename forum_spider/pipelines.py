@@ -21,10 +21,15 @@ class DropoutPipeline:
         self.cnt = 0  # number of DropItem
 
     def process_item(self, item, spider):
-        if not item.get('title', '') or not item.get('text', '') or not item.get('url', ''):
+        if not item.get('title', None):
             self.cnt += 1
-            raise DropItem("Drop article")
-            return
+            raise DropItem("Drop article because of title")
+        if not item.get('text', None):
+            self.cnt += 1
+            raise DropItem("Drop article because of text")
+        if not item.get('url', None):
+            self.cnt += 1
+            raise DropItem("Drop article because of url")
         return item
 
     def close_spider(self, spider):
@@ -32,9 +37,15 @@ class DropoutPipeline:
 
 
 class TextPreprocessPipeline:
-    DISABLE_CUDA = False
+    DISABLE_CUDA = True
 
     def open_spider(self, spider):
+        settings = get_project_settings()
+        cli = MongoClient(settings['MONGO_HOST'])
+        self.cur = cli[settings['MONGO_DB']
+                       ][spider.custom_settings['COL_NAME']]
+        
+
         self.tokenizer = Tokenizer()
 
         self.ws = WS('./ckip_model', disable_cuda=self.DISABLE_CUDA)
@@ -50,6 +61,10 @@ class TextPreprocessPipeline:
     def process_item(self, item, spider):
         item['title'] = self.__remove_space(item['title'])
         item['text'] = self.__remove_space(item['text'])
+
+        if self.cur.find_one({'url': item['url'], 'last_update_date': item['last_update_date']}):
+            print(f"Pass {item['url']}")
+            return item
         # GAIS Tokenize
         # item['text_seg'] = self.tokenizer.tokenize(item['text'])
         # item['title_seg'] = self.tokenizer.tokenize(item['title'])
@@ -109,6 +124,7 @@ class GaisDbPipeline:
 
 class MongoDbPipeline:
     def open_spider(self, spider):
+        print(f'spider: {spider.name}')
         spider.log('MongoDbPipeline: connect to db')
         settings = get_project_settings()
         cli = MongoClient(settings['MONGO_HOST'])
@@ -131,4 +147,5 @@ class MongoDbPipeline:
             'start_time': self.start_time,
             'end_time': end_time,
         }
+        print(f'{spider.name} finished')
         self.cur_logs.insert(val)
