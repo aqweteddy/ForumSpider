@@ -13,9 +13,9 @@ from index2board import DEFAULT_DCARD
 start = time.time()
 parser = ArgumentParser()
 parser.add_argument('--ptt_page', type=int, default=100, help='ptt spider pages for each board')
-parser.add_argument('--dcard_page', type=int, default=1, help='dcard spider pages for each board')
-parser.add_argument('--gamer_page', type=int, default=1, help='gamer spider pages for each board')
-parser.add_argument('--m01_page', type=int, default=1, help='mobile01 spider pages for each board')
+parser.add_argument('--dcard_page', type=int, default=20, help='dcard spider pages for each board')
+parser.add_argument('--gamer_page', type=int, default=20, help='gamer spider pages for each board')
+parser.add_argument('--m01_page', type=int, default=20, help='mobile01 spider pages for each board')
 
 args = parser.parse_args()
 # 政治 廢文 3C 閒聊 生活 汽機車 感情 股票 電玩
