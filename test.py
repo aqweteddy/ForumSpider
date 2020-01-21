@@ -1,19 +1,52 @@
-from ckiptagger import WS, POS, NER
-from gaisTokenizer import Tokenizer
+from torch.utils.data import Dataset, DataLoader
+import torch
 
 
-gt = Tokenizer()
-ws = WS('./data', disable_cuda=True)
-pos = POS('./data', disable_cuda=True)
-ner = NER('./data', disable_cuda=True)
+class QuestDataset(Dataset):
+    def __init__(self, df, tokenizer, input_categories, output_categories):
+        self.tokenizer = tokenizer
+        self.ids_q, self.masks_q, self.segs_q  = [], [], []
+        self.ids_a, self.masks_a, self.segs_a  = [], [], []
+        self.df = df
+        self.output_categories = output_categories
+        for _, inst in tqdm(df[input_categories]):
+            title, question, answer = inst.question_title, inst.question_body, inst.answer
+            
+            id_q, mask_q, seg_q = self.encode_str(f'{title} {text}', None)
+            id_a, mask_a, seg_a = self.encode_str(answer, None)
+            
+            self.ids_q.append(id_q)
+            self.masks_q.append(mask_q)
+            self.segs_q.append(seg_q)
+            self.ids_a.append(id_a)
+            self.masks_a.append(mask_a)
+            self.segs_a.append(seg_a)
+
+    def __getitem__(self, k):
+        """
+        return (id_q, mask_q, seg_q), (id_a, mask_a, seg_a), (OUTPUT)
+        """
+        return [torch.tensor(self.ids_q[k]), torch.tensor(self.masks_q[k]), torch.tensor(self.segs_a[k])],
+               [torch.tensor(self.ids_a[k]), torch.tensor(self.masks_a[k]), torch.tensor(self.segs_a[k])],
+               [torch.tensor(df[output_categories][k])]
+                        
+
+        
+    
+    def encode_str(s1, s2, truncation_strategy='longest_first', length=MAX_SEQ_LEN):
+        inputs = self.tokenizer.encode_plus(str1, str2,
+                                       add_special_tokens=True,
+                                       max_length=length,
+                                       truncation_strategy=truncation_strategy)
+
+        pad_len = length - len(input_ids)
+        pad_id = tokenizer.pad_token_id
+
+#         data + padding
+        input_id = inputs["input_ids"] + [pad_id] * pad_len
+        input_mask = [1] * len(input_ids) + [0] * pad_len
+        input_segment = inputs["token_type_ids"] + [0] * pad_len
+        
+        return [input_id, input_mask, input_segment]
 
 
-sentence = '美國參議院針對今天總統布什所提名的勞工部長趙小蘭展開認可聽證會，預料她將會很順利通過參議院支持，成為該國有史以來第一位的華裔女性內閣成員。'
-result_token = gt.tokenize(sentence)
-result_token = [result_token]
-# result_token = ws([sentence])
-result_pos = pos(result_token)
-print(result_pos, result_token)
-result_ner = ner(result_token, result_pos)
-
-print(result_ner)
