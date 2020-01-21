@@ -38,7 +38,7 @@ class GamerSpider(scrapy.Spider):
             except TypeError:
                 pass
 
-        if resp.meta['page'] < self.max_page:
+        if resp.meta['page'] < self.max_page and resp.meta['page'] < 100:
             url = resp.css('.next::attr(href)').get()
             if url:
                 yield scrapy.Request(url='https://forum.gamer.com.tw/B.php' + url,

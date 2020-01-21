@@ -21,7 +21,7 @@ PTT_BOARD = ['Gossiping', 'C_Chat', 'NBA', 'HatePolitics', 'Lifeismoney', 'Stock
 # PTT_BOARD = ['C_Chat']
 DCARD_BOARD = ['hot']
 # 場外、講談說論、Joke
-GAMER_BOARD = [60076, 60440, 60555] 
+GAMER_BOARD = [60076, 60440, 60555, 60030] 
 # GAMER_BOARD = [60076]
 # 手機 相機 筆電 電腦 蘋果 影音 汽車 機車 單車 遊戲 居家 女性 時尚 運動 戶外 生活 旅遊 閒聊 時事
 MOB01_BOARD_C = [16, 20, 19, 17, 30, 28, 21, 29, 24, 23, 26, 27, 31, 33, 3, 35, 18, 36]
