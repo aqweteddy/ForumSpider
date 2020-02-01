@@ -44,13 +44,13 @@ class DcardSpider(scrapy.Spider):
             item['create_date'] = datetime.strptime(data['createdAt'], '%Y-%m-%dT%H:%M:%S.%fZ')
             item['last_update_date'] = item['create_date']
             item['like_cnt'] = data['likeCount']
-            yield scrapy.Request(f'https://dcard.tw/_api/posts/{data['id']}',
+            yield scrapy.Request(f'https://dcard.tw/_api/posts/{data["id"]}',
                                  callback=self.parse_post,
                                  meta={ 'item': item })
             last_id = item['id']
 
         if self.max_page < resp.meta['times'] and len(result) != 0:
-            yield scrapy.Request(f'{resp.meta['url']}&before={last_id}',
+            yield scrapy.Request(f'{resp.meta["url"]}&before={last_id}',
                                  callback=self.parse,
                                  meta={'times': resp.meta['times'] + 1,
                                        'url': resp.meta['url']}
