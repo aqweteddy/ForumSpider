@@ -32,7 +32,7 @@ class BaseItem(scrapy.Item):
     raw_text = scrapy.Field()
 
     def __repr__(self):
-        return self.title
+        return self.item['title']
 
 
 class PttItem(BaseItem):

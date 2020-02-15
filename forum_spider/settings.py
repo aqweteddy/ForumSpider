@@ -72,16 +72,16 @@ DOWNLOADER_MIDDLEWARES = {
 FEED_EXPORT_ENCODING = 'utf-8'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = True
 # The initial download delay
 #AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_MAX_DELAY = 60
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
+# AUTOTHROTTLE_TARGET_CONCURRENCY = 1.5
 # Enable showing throttling stats for every response received:
-AUTOTHROTTLE_DEBUG = False
+# AUTOTHROTTLE_DEBUG = False
 # ! LOG_LEVEL
 
 LOG_LEVEL = 'INFO' 
@@ -95,9 +95,9 @@ LOG_LEVEL = 'INFO'
 
 ITEM_PIPELINES={
         'forum_spider.pipelines.DropoutPipeline': 100,
-        # 'forum_spider.pipelines.TextPreprocessPipeline': 200,
-        # 'forum_spider.pipelines.GaisDbPipeline': 850,
-        # 'forum_spider.pipelines.MongoDbPipeline': 900
+        'forum_spider.pipelines.TextPreprocessPipeline': 200,
+        'forum_spider.pipelines.GaisDbPipeline': 850,
+        'forum_spider.pipelines.MongoDbPipeline': 900
 }
 
 # ! MongoDB host and DBName
