@@ -33,7 +33,7 @@ class DropoutPipeline:
         return item
 
     def close_spider(self, spider):
-        print(f'Drop {self.cnt} items.')
+        spider.logger.warning(f'Drop {self.cnt} items.')
 
 
 class TextPreprocessPipeline:

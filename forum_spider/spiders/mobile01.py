@@ -25,6 +25,7 @@ class Mobile01Spider(scrapy.Spider):
 
         for f in self.board_f:
             self.logger.info(f'Now f: {f}')
+            args = {'f': f, 'p': 1}
             yield scrapy.Request(f'{url}{urlencode(args)}',
                                  meta={'now_page': 1,
                                        'base_url': url,

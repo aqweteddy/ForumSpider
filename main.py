@@ -13,7 +13,7 @@ from index2board import DEFAULT_DCARD
 start = time.time()
 parser = ArgumentParser()
 parser.add_argument('--ptt_page', type=int, default=1, help='ptt spider pages for each board')
-parser.add_argument('--dcard_page', type=int, default=2, help='dcard spider pages for each board')
+parser.add_argument('--dcard_page', type=int, default=1, help='dcard spider pages for each board')
 parser.add_argument('--gamer_page', type=int, default=1, help='gamer spider pages for each board')
 parser.add_argument('--m01_page', type=int, default=1, help='mobile01 spider pages for each board')
 

@@ -2,8 +2,8 @@ while true
 do
     python main.py --ptt_page=3\
     --dcard_page=2\
-    --gamer_page=2\
-    --m01_page=2
+    --gamer_page=1\
+    --m01_page=1
     wait
     # sleep 10m
 done
