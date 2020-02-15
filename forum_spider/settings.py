@@ -96,7 +96,7 @@ LOG_LEVEL = 'INFO'
 ITEM_PIPELINES={
         'forum_spider.pipelines.DropoutPipeline': 100,
         'forum_spider.pipelines.TextPreprocessPipeline': 200,
-        'forum_spider.pipelines.GaisDbPipeline': 850,
+        # 'forum_spider.pipelines.GaisDbPipeline': 850,
         'forum_spider.pipelines.MongoDbPipeline': 900
 }
 
