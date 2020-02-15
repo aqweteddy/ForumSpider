@@ -47,7 +47,7 @@ class GamerSpider(scrapy.Spider):
             if url:
                 yield scrapy.Request(url='https://forum.gamer.com.tw/B.php' + url,
                                      callback=self.parse,
-                                     meta={'page': resp.meta['page'] + 1}
+                                     meta={'page': meta['page'] + 1, 'bsn': meta['bsn']}
                                      )
 
     def parse_post(self, resp):
