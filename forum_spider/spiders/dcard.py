@@ -27,9 +27,11 @@ class DcardSpider(scrapy.Spider):
                 url = f'https://dcard.tw/_api/posts?{key}'
             else:
                 url = f'https://dcard.tw/_api/forums/{board}/posts?{key}'
+            self.logger.info(f'Now: {board}')
             yield scrapy.Request(url, meta={'times': 1, 'url': url})
 
     def parse(self, resp):
+        self.logger.info(f'url: {resp.meta["url"]} Page: No {resp.meta["times"]}')
         result = json.loads(resp.body_as_unicode())
         last_id = 0
 
@@ -49,7 +51,7 @@ class DcardSpider(scrapy.Spider):
                                  meta={ 'item': item })
             last_id = item['id']
 
-        if self.max_page < resp.meta['times'] and len(result) != 0:
+        if self.max_page > resp.meta['times'] and len(result) != 0:
             yield scrapy.Request(f'{resp.meta["url"]}&before={last_id}',
                                  callback=self.parse,
                                  meta={'times': resp.meta['times'] + 1,

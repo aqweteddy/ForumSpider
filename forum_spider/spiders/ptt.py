@@ -18,12 +18,16 @@ class PttSpider(scrapy.Spider):
         self.max_page = max_page
 
     def start_requests(self):
+        self.logger.info(f'Start {self.name} spider')
         for board in self.board:
             url = 'https://www.ptt.cc/bbs/{}/index.html'.format(board)
+            self.logger.info(f'Now: {board}')
+
             yield scrapy.Request(url, cookies={'over18': '1'}, meta={'board': board, 'now_page': 1})
 
     def parse(self, resp):
         meta = resp.meta
+        self.logger.info(f'board: {meta["board"]} Page: No {meta["now_page"]}')
 
         for post in resp.xpath('//div[@class="r-ent"]/div[@class="title"]/a'):
             item = PttItem()

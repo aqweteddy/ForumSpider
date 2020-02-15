@@ -17,6 +17,7 @@ class GamerSpider(scrapy.Spider):
 
     def start_requests(self):
         for bsn in self.bsn:
+            self.logger.info(f'Now bsn: {bsn}')
             url = 'https://forum.gamer.com.tw/B.php?bsn={}'.format(bsn)
             yield scrapy.Request(url=url, callback=self.parse, meta={
                 'page': 1,
@@ -24,6 +25,9 @@ class GamerSpider(scrapy.Spider):
             })
 
     def parse(self, resp):
+        meta = resp.meta
+        self.logger.info(f'bsn: {meta["bsn"]} Page: {meta["page"]}')
+
         for sel in resp.css('.b-list-item'):
             item = GamerItem()
             item['forum'] = 'gamer'
@@ -49,7 +53,6 @@ class GamerSpider(scrapy.Spider):
     def parse_post(self, resp):
         item = resp.meta['item']
         comment = []
-        print(item['url'])
         for sel in resp.css('.c-section'):
             # article
             if sel.css('.c-post__header__title'):  # text
@@ -68,7 +71,7 @@ class GamerSpider(scrapy.Spider):
                 item['create_date'] = item['last_update_date']
                 tmp = sel.css('a.count::text').getall()
                 item['like_cnt'] = 0 if tmp[0] == '-' else int(tmp[0]) if tmp[0] != '爆' else 1000
-                item['dislike_cnt'] = 0 if tmp[1] == '-' else int(tmp[1]) if tmp[1] != '爆' else 1000
+                item['dislike_cnt'] = 0 if tmp[1] == '-' else int(tmp[1]) if tmp[1] != 'X' else 1000
             if sel.css('.c-article__content *::text') and not sel.css('.c-post__header__title'):
                 # comment
                 comment.append({
@@ -84,6 +87,5 @@ class GamerSpider(scrapy.Spider):
                     })
 
         item['comment'] = comment
-        print(item)
 
         yield item

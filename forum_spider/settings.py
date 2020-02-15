@@ -36,7 +36,7 @@ ROBOTSTXT_OBEY = True
 #COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
+TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
 #DEFAULT_REQUEST_HEADERS = {
@@ -95,10 +95,10 @@ LOG_LEVEL = 'INFO'
 
 ITEM_PIPELINES={
         'forum_spider.pipelines.DropoutPipeline': 100,
-        'forum_spider.pipelines.TextPreprocessPipeline': 200,
+        # 'forum_spider.pipelines.TextPreprocessPipeline': 200,
         # 'forum_spider.pipelines.GaisDbPipeline': 850,
-        'forum_spider.pipelines.MongoDbPipeline': 900
-    }
+        # 'forum_spider.pipelines.MongoDbPipeline': 900
+}
 
 # ! MongoDB host and DBName
 # MONGO_HOST = "localhost:27017"

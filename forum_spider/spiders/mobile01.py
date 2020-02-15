@@ -24,12 +24,14 @@ class Mobile01Spider(scrapy.Spider):
         url = 'https://www.mobile01.com/topiclist.php?'
 
         for f in self.board_f:
+            self.logger.info(f'Now f: {f}')
             yield scrapy.Request(f'{url}{urlencode(args)}',
                                  meta={'now_page': 1,
                                        'base_url': url,
                                        'args': args})
         url = 'https://www.mobile01.com/forumtopic.php?'
         for c in self.board_c:
+            self.logger.info(f'Now c: {c}')
             args = {'c': c, 'p': 1}
             yield scrapy.Request(f'{url}{urlencode(args)}',
                                  meta={'now_page': 1,
@@ -37,7 +39,7 @@ class Mobile01Spider(scrapy.Spider):
                                        'args': args})
     def parse(self, resp):
         meta = resp.meta
-        print(f"Now: {meta['now_page']}, url: {meta['base_url']}{urlencode(meta['args'])}")
+        self.logger.info(f"url: {meta['base_url']}{urlencode(meta['args'])} Page: {meta['now_page']}")
         sel = resp.css('.l-listTable')
         note_iter = resp.css('.o-fNotes::text').getall()
         for url, title, date_idx in zip(sel.css('.c-listTableTd__title>a::attr(href)').getall(),
@@ -97,6 +99,5 @@ class Mobile01Spider(scrapy.Spider):
             item['board'] = resp.css('.c-breadCrumb__item')[1].css('a::text').get().strip()
             item['sub_board'] = resp.css('.c-breadCrumb__item')[2].css('a::text').get().strip()
             item['comment_cnt'] = len(item['comment'])
-            print(item['title'], item['url'])
 
             yield item

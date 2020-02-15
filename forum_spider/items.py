@@ -27,6 +27,13 @@ class BaseItem(scrapy.Item):
     title_pos = scrapy.Field()
     title_ner = scrapy.Field()
 
+    # title, text after removing special chars
+    raw_title = scrapy.Field()
+    raw_text = scrapy.Field()
+
+    def __repr__(self):
+        return self.title
+
 
 class PttItem(BaseItem):
     author_ip = scrapy.Field()

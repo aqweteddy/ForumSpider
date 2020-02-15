@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-import json
+import json, re
 
 from ckiptagger import NER, POS, WS
 from pymongo import MongoClient
@@ -38,6 +38,7 @@ class DropoutPipeline:
 
 class TextPreprocessPipeline:
     DISABLE_CUDA = True
+    TOKEN = 'pX5C62575A587D56505F65505E5C7D5D5F3A193206221B30532B25030F382231021D2417063B1E5336071F145B52A9FAEB8BC1E48CD6EB5DFN'
 
     def open_spider(self, spider):
         settings = get_project_settings()
@@ -46,31 +47,39 @@ class TextPreprocessPipeline:
                        ][spider.custom_settings['COL_NAME']]
         
 
-        self.tokenizer = Tokenizer()
+        self.tokenizer = Tokenizer(self.TOKEN)
 
-        self.ws = WS('./ckip_model', disable_cuda=self.DISABLE_CUDA)
+        # self.ws = WS('./ckip_model', disable_cuda=self.DISABLE_CUDA)
         self.pos = POS('./ckip_model', disable_cuda=self.DISABLE_CUDA)
         self.ner = NER('./ckip_model', disable_cuda=self.DISABLE_CUDA)
 
-    def __remove_space(self, text: str):
-        text = text.replace(u'\xa0', u' ')
-        text = text.replace(u'\u3000',u' ')
+    def __remove_special_chars(self, text: str):
+        # remove url
+        text = re.sub(r'''(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))''', " ", text)
+        # remove sent from ... 
+        text = text.split('--\nSent ')[0]
+        # keep only eng, zh, number
+        rule = re.compile(r"[^a-zA-Z0-9\u4e00-\u9fa5]")
+        text = rule.sub(' ', text)
+        # remove space
+        text = ' '.join(text.split())
         return text
 
 
     def process_item(self, item, spider):
-        item['title'] = self.__remove_space(item['title'])
-        item['text'] = self.__remove_space(item['text'])
-
+        item['raw_title'] = self.__remove_special_chars(item['title'])
+        item['raw_text'] = self.__remove_special_chars(item['text'])
+        
         if self.cur.find_one({'url': item['url'], 'last_update_date': item['last_update_date']}):
-            print(f"Pass {item['url']}")
+            spider.logger.debug(f"already existed {item['url']}")
             return item
+        
         # GAIS Tokenize
-        # item['text_seg'] = self.tokenizer.tokenize(item['text'])
-        # item['title_seg'] = self.tokenizer.tokenize(item['title'])
+        item['text_seg'] = self.tokenizer.tokenize(item['raw_text'])
+        item['title_seg'] = self.tokenizer.tokenize(item['raw_title'])
 
-        item['text_seg'], item['title_seg'] = self.ws(
-            [item['text'], item['title']])
+        # item['text_seg'], item['title_seg'] = self.ws(
+        #     [item['text'], item['title']])
         item['text_pos'], item['title_pos'] = self.pos(
             [item['text_seg'], item['title_seg']])
         item['text_ner'], item['title_ner'] = self.ner([item['text_seg'], item['title_seg']],
@@ -112,7 +121,6 @@ class GaisDbPipeline:
         ret_sel = json.loads(ret_sel, encoding='utf-8')['data']
         ret_sel = json.loads(ret_sel, encoding='utf-8')
         item = dict(item)
-        print(item)
         if ret_sel['cnt'] > 0:
             rec_id = ret_sel['recs'][0]['_rid']
             resp = gp.Update(self.db_name, rec_id, item,
@@ -124,7 +132,7 @@ class GaisDbPipeline:
 
 class MongoDbPipeline:
     def open_spider(self, spider):
-        print(f'spider: {spider.name}')
+        spider.logger.info(f'spider: {spider.name}')
         spider.log('MongoDbPipeline: connect to db')
         settings = get_project_settings()
         cli = MongoClient(settings['MONGO_HOST'])
@@ -135,7 +143,6 @@ class MongoDbPipeline:
         self.start_time = datetime.now()
 
     def process_item(self, item, spider):
-
         self.cur.update_one({'url': item['url']}, {
                             '$set': dict(item)}, upsert=True)
         return item
@@ -147,5 +154,5 @@ class MongoDbPipeline:
             'start_time': self.start_time,
             'end_time': end_time,
         }
-        print(f'{spider.name} finished')
+        spider.logger.info(f'{spider.name} finished')
         self.cur_logs.insert(val)
