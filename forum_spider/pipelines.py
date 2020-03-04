@@ -9,7 +9,7 @@ from scrapy.exceptions import DropItem
 from gaisTokenizer import Tokenizer
 # import gaipy as gp
 
-# TODO: Pipeline LOGS
+# * Done: Pipeline LOGS
 # TODO: export to json / csv
 # FIXME: NuDB Pipeline
 # * Done: MongoDB
@@ -78,9 +78,11 @@ class TextPreprocessPipeline:
         item['text_seg'] = self.tokenizer.tokenize(item['raw_text'])
         item['title_seg'] = self.tokenizer.tokenize(item['raw_title'])
 
+
+        # CKIP
         # item['text_seg'], item['title_seg'] = self.ws(
         #     [item['text'], item['title']])
-        item['text_pos'], item['title_pos'] = self.pos(
+        item['text_pos'], item['title_pos'] = self.pos( # POS
             [item['text_seg'], item['title_seg']])
         item['text_ner'], item['title_ner'] = self.ner([item['text_seg'], item['title_seg']],
                                                        [item['text_pos'],
@@ -93,7 +95,6 @@ class TextPreprocessPipeline:
                              cat, word in item['title_ner'] if ner_filter(cat)]
         item['text_ner'] = [(a, b, cat, word) for a, b, cat,
                             word in item['text_ner'] if ner_filter(cat)]
-
         return item
 
 
@@ -133,7 +134,7 @@ class GaisDbPipeline:
 class MongoDbPipeline:
     def open_spider(self, spider):
         spider.logger.info(f'spider: {spider.name}')
-        spider.log('MongoDbPipeline: connect to db')
+        spider.logger.info('MongoDbPipeline: connect to db')
         settings = get_project_settings()
         cli = MongoClient(settings['MONGO_HOST'])
         self.cur = cli[settings['MONGO_DB']
@@ -154,5 +155,5 @@ class MongoDbPipeline:
             'start_time': self.start_time,
             'end_time': end_time,
         }
-        spider.logger.info(f'{spider.name} finished')
+        spider.logger.warning(f'{spider.name} finished')
         self.cur_logs.insert(val)

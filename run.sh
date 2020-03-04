@@ -1,7 +1,7 @@
 while true 
 do
-    python main.py --ptt_page=3\
-    --dcard_page=2\
+    python main.py --ptt_page=2\
+    --dcard_page=1\
     --gamer_page=1\
     --m01_page=1
     wait
